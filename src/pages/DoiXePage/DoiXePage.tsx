@@ -113,8 +113,6 @@ const DoiXePage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Hành chính</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Đợi xe</span>
             </nav>
           </div>
@@ -179,7 +177,7 @@ const DoiXePage: React.FC = () => {
               <input
                 type="text"
                 className="w-full pl-9 pr-4 py-1.5 border border-slate-200 rounded text-[13px] focus:ring-1 focus:ring-[#2563eb] focus:border-[#2563eb] outline-none placeholder-slate-400 transition-all font-medium text-slate-700 shadow-sm"
-                placeholder="Tìm biển số, tài xế..."
+                placeholder="Tìm biển số, tên tài xế..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -208,7 +206,8 @@ const DoiXePage: React.FC = () => {
                   <th className="px-4 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-4 py-3">Biển Số - Tài Xế</th>
+                  <th className="px-4 py-3">Biển Số</th>
+                  <th className="px-4 py-3">Tên Tài Xế</th>
                   <th className="px-4 py-3">Số Điện Thoại</th>
                   <th className="px-4 py-3 text-right">Trọng Tải (Tấn)</th>
                   <th className="px-4 py-3 text-center">Tình Trạng</th>
@@ -218,11 +217,11 @@ const DoiXePage: React.FC = () => {
               <tbody className="divide-y divide-slate-100 text-[13px]">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải danh sách xe...</td>
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải danh sách xe...</td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 font-medium italic">Không có xe nào trong danh sách đợi</td>
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium italic">Không có xe nào trong danh sách đợi</td>
                   </tr>
                 ) : (
                   filteredData.map((item) => (
@@ -231,10 +230,10 @@ const DoiXePage: React.FC = () => {
                         <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-slate-900 font-bold uppercase">{item.bien_so_xe}</span>
-                          <span className="text-slate-500 text-[11px]">{item.ten_tai_xe}</span>
-                        </div>
+                        <span className="text-slate-900 font-bold uppercase">{item.bien_so_xe}</span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="text-slate-700 font-medium">{item.ten_tai_xe}</span>
                       </td>
                       <td className="px-4 py-4 font-medium text-slate-600">
                         {item.so_dien_thoai}

@@ -28,6 +28,23 @@ const DonViVanChuyenDialog: React.FC<DonViVanChuyenDialogProps> = ({ isOpen, onC
     if (isOpen) setIsClosing(false);
   }, [isOpen]);
 
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'DVVC-';
+    for (let i = 0; i < 4; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
+    }
+  }, [isOpen, initialData]);
+
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -131,15 +148,16 @@ const DonViVanChuyenDialog: React.FC<DonViVanChuyenDialogProps> = ({ isOpen, onC
               <div className="grid grid-cols-1 gap-5">
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Hash size={14} className="text-slate-400" /> Mã Đơn vị <span className="text-red-500 font-bold">*</span>
+                    <Hash size={14} className="text-slate-400" /> ID <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="text"
                     name="ma_dvvc"
+                    readOnly
                     required
-                    defaultValue={initialData?.ma_dvvc || ''}
-                    placeholder="Mã định danh (VD: DVVC001)..."
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-slate-500/20 focus:border-slate-500 outline-none transition-all placeholder-slate-400"
+                    value={initialData?.ma_dvvc || generatedId}
+                    placeholder="ID tự động sinh..."
+                    className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 focus:ring-0 focus:border-slate-200 outline-none transition-all cursor-not-allowed"
                   />
                 </div>
 

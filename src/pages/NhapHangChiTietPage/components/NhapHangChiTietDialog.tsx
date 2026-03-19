@@ -23,11 +23,10 @@ interface NhapHangChiTietDialogProps {
   onClose: () => void;
   onSuccess: () => void;
   receipts: any[];
-  items: any[];
   initialData?: any;
 }
 
-const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, initialData }: NhapHangChiTietDialogProps) => {
+const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, initialData }: NhapHangChiTietDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -68,13 +67,13 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
     try {
       if (initialData) {
         const { error: updateError } = await supabase
-          .from('receipt_items')
+          .from('nhap_hang_chi_tiet')
           .update(data)
           .eq('id', initialData.id);
         if (updateError) throw updateError;
       } else {
         const { error: insertError } = await supabase
-          .from('receipt_items')
+          .from('nhap_hang_chi_tiet')
           .insert([data]);
         if (insertError) throw insertError;
       }
@@ -146,7 +145,7 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Link size={14} className="text-slate-400" /> Liên kết Phiếu Nhập <span className="text-red-500 font-bold">*</span>
+                    <Link size={14} className="text-slate-400" /> ID Ref (Phiếu nhập) <span className="text-red-500 font-bold">*</span>
                   </label>
                   <div className="relative">
                     <select
@@ -157,7 +156,7 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
                     >
                       <option value="">Chọn phiếu nhập...</option>
                       {receipts.map(r => (
-                        <option key={r.id} value={r.id}>{r.so_phieu}</option>
+                        <option key={r.id} value={r.id}>{r.id_nhap}</option>
                       ))}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -168,21 +167,21 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Package size={14} className="text-slate-400" /> Mã Hàng Hóa <span className="text-red-500 font-bold">*</span>
+                    <Package size={14} className="text-slate-400" /> Mã Hàng <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input type="text" name="ma_hang" required defaultValue={initialData?.ma_hang || ''} placeholder="Mã hàng hóa..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder-slate-400" />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Warehouse size={14} className="text-slate-400" /> Kho Lưu Trữ <span className="text-red-500 font-bold">*</span>
+                    <Warehouse size={14} className="text-slate-400" /> Kho <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input type="text" name="kho" required defaultValue={initialData?.kho || ''} placeholder="Tên/Mã kho..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder-slate-400" />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Activity size={14} className="text-slate-400" /> Hành động nghiệp vụ
+                    <Activity size={14} className="text-slate-400" /> Hành động
                   </label>
                   <input type="text" name="hanh_dong" defaultValue={initialData?.hanh_dong || ''} placeholder="Nhập hành động..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder-slate-400" />
                 </div>
@@ -207,7 +206,7 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Scale size={14} className="text-slate-400" /> Tỷ Trọng
+                    <Scale size={14} className="text-slate-400" /> Tỷ Trọng (Lưu)
                   </label>
                   <input type="number" step="0.0001" name="ty_trong_luu" defaultValue={initialData?.ty_trong_luu || 0} placeholder="0.0000" className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder-slate-400" />
                 </div>
@@ -228,7 +227,7 @@ const NhapHangChiTietDialog = ({ isOpen, onClose, onSuccess, receipts, items, in
 
                 <div className="space-y-1.5 md:col-span-2">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <DollarSign size={14} className="text-slate-400" /> Đơn giá nhập hàng (VND)
+                    <DollarSign size={14} className="text-slate-400" /> Đơn giá (VND)
                   </label>
                   <div className="relative">
                     <input type="number" name="don_gia_vnd" defaultValue={initialData?.don_gia_vnd || 0} placeholder="0" className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder-slate-400" />

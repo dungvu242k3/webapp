@@ -114,8 +114,6 @@ const LocTonKhoPage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Quản lý kho</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Lọc tồn kho</span>
             </nav>
           </div>

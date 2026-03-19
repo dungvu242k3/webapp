@@ -130,8 +130,6 @@ const NhapHangPage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Quản lý kho</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Nhập hàng</span>
             </nav>
           </div>
@@ -219,29 +217,36 @@ const NhapHangPage: React.FC = () => {
         {/* Data Table Matching Template */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden text-[13px]">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[1200px]">
+            <table className="w-full text-left border-collapse min-w-[2200px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wider">
                   <th className="px-3 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-3 py-3 w-[120px]">Phiếu & ID</th>
-                  <th className="px-3 py-3 w-[150px]">Dự án & Kho</th>
-                  <th className="px-3 py-3 w-[150px]">Nhà cung cấp</th>
-                  <th className="px-3 py-3 w-[180px]">Vận chuyển & Phí</th>
-                  <th className="px-3 py-3">Ghi chú & Ảnh</th>
-                  <th className="px-3 py-3 w-[150px]">Nhân sự & Thời gian</th>
+                  <th className="px-3 py-3 w-[160px]">ID Nhập</th>
+                  <th className="px-3 py-3 w-[160px]">Số Phiếu</th>
+                  <th className="px-3 py-3 w-[160px]">Mã Dự Án</th>
+                  <th className="px-3 py-3 w-[160px]">Mã Kho</th>
+                  <th className="px-3 py-3 w-[160px]">Mã NCC</th>
+                  <th className="px-3 py-3 w-[160px]">Mã Địa Chỉ Mua</th>
+                  <th className="px-3 py-3 w-[160px]">Mã Xe Mua</th>
+                  <th className="px-3 py-3 w-[160px]">Mã DVVC mua</th>
+                  <th className="px-3 py-3 w-[160px] text-right">Phí Vận Chuyển</th>
+                  <th className="px-3 py-3 w-[160px]">Ghi Chú</th>
+                  <th className="px-3 py-3 w-[160px] text-center">Hình Ảnh</th>
+                  <th className="px-3 py-3 w-[160px]">Nhân Viên Nhập</th>
+                  <th className="px-3 py-3 w-[160px]">Ngày Giờ</th>
                   <th className="px-3 py-3 text-center w-[100px]">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={8} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải nhật ký nhập hàng...</td>
+                    <td colSpan={15} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải nhật ký nhập hàng...</td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="px-6 py-12 text-center text-slate-400 font-medium italic">Hiện chưa có dữ liệu nhập hàng</td>
+                    <td colSpan={15} className="px-6 py-12 text-center text-slate-400 font-medium italic">Hiện chưa có dữ liệu nhập hàng</td>
                   </tr>
                 ) : (
                   filteredData.map((item) => (
@@ -250,56 +255,62 @@ const NhapHangPage: React.FC = () => {
                         <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-slate-900 font-bold">{item.so_phieu}</span>
-                          <span className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase font-bold">{item.id_nhap}</span>
+                        <span className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase font-bold">{item.id_nhap}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <span className="text-slate-900 font-bold">{item.so_phieu}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-600 font-bold">
+                          <Briefcase size={12} className="text-slate-400" /> {item.ma_du_an}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-600 font-bold">
-                            <Briefcase size={12} className="text-slate-400" /> {item.ma_du_an}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-500 font-medium text-[11px]">
-                            <Warehouse size={12} className="text-slate-400" /> {item.ma_kho}
-                          </div>
+                        <div className="flex items-center gap-1.5 text-slate-500 font-medium text-[11px]">
+                          <Warehouse size={12} className="text-slate-400" /> {item.ma_kho}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex items-center gap-2 text-slate-700 font-bold">
-                           <User size={14} className="text-slate-400" />
+                        <div className="flex items-center gap-2 text-slate-700 font-bold text-[11px]">
+                           <User size={13} className="text-slate-400" />
                            {item.ma_ncc}
                         </div>
                       </td>
-                      <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-600 text-[11px] font-bold italic">
-                            <Truck size={12} className="text-slate-400" /> {item.ma_xe_mua || '—'}
-                          </div>
-                          <div className="text-[#2563eb] font-bold text-[12px] tabular-nums">
-                            +{formatCurrency(item.phi_van_chuyen)}
-                          </div>
-                        </div>
+                      <td className="px-3 py-4 text-slate-500 text-[11px] font-medium italic">
+                        {item.ma_dia_chi_mua || '—'}
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1 max-w-[200px]">
-                          <span className="text-slate-600 truncate font-medium italic" title={item.ghi_chu}>{item.ghi_chu || '(Không có ghi chú)'}</span>
-                          {item.hinh_anh && (
-                            <span className="text-[10px] text-blue-500 hover:underline cursor-pointer flex items-center gap-1 font-bold">
-                              📷 Xem hình ảnh
-                            </span>
-                          )}
+                        <div className="flex items-center gap-1.5 text-slate-600 text-[11px] font-bold italic">
+                          <Truck size={12} className="text-slate-400" /> {item.ma_xe_mua || '—'}
                         </div>
                       </td>
+                      <td className="px-3 py-4 text-slate-500 text-[11px] font-medium italic">
+                        {item.ma_dvvc_mua || '—'}
+                      </td>
+                      <td className="px-3 py-4 text-right">
+                        <span className="text-[#2563eb] font-bold text-[12px] tabular-nums">
+                          {formatCurrency(item.phi_van_chuyen)}
+                        </span>
+                      </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-0.5">
-                          <span className="text-slate-900 font-bold">{item.nhan_vien_nhap}</span>
-                          <span className="text-[11px] text-slate-400 font-medium">
-                            {new Date(item.ngay_gio).toLocaleString('vi-VN', { 
-                              day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' 
-                            })}
+                        <span className="text-slate-600 truncate font-medium italic max-w-[180px] block" title={item.ghi_chu}>
+                          {item.ghi_chu || '(Không có)'}
+                        </span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        {item.hinh_anh ? (
+                          <span className="text-blue-500 hover:text-blue-700 cursor-pointer inline-flex items-center justify-center size-7 bg-blue-50 rounded-lg transition-colors shadow-sm border border-blue-100" title="Xem hình ảnh">
+                            📷
                           </span>
-                        </div>
+                        ) : '—'}
+                      </td>
+                      <td className="px-3 py-4">
+                        <span className="text-slate-900 font-bold">{item.nhan_vien_nhap}</span>
+                      </td>
+                      <td className="px-3 py-4 text-slate-400 font-medium text-[11px] tabular-nums">
+                        {new Date(item.ngay_gio).toLocaleString('vi-VN', { 
+                          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' 
+                        })}
                       </td>
                       <td className="px-3 py-4">
                         <div className="flex items-center justify-center gap-3">

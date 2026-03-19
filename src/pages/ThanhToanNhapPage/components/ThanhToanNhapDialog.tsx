@@ -34,7 +34,7 @@ const ThanhToanNhapDialog: React.FC<ThanhToanNhapDialogProps> = ({ isOpen, onClo
   }, [isOpen]);
 
   const fetchReceipts = async () => {
-    const { data: res } = await supabase.from('nhap_hang').select('id, so_phieu').order('created_at', { ascending: false });
+    const { data: res } = await supabase.from('nhap_hang').select('id, id_nhap, so_phieu').order('created_at', { ascending: false });
     setReceipts(res || []);
   };
 
@@ -53,7 +53,7 @@ const ThanhToanNhapDialog: React.FC<ThanhToanNhapDialogProps> = ({ isOpen, onClo
 
     const formData = new FormData(e.currentTarget);
     const data = {
-      ma_thanh_toan: formData.get('ma_thanh_toan') as string,
+      ma_thanh_toan: initialData?.ma_thanh_toan || `TTN-${Date.now()}`,
       id_ref: formData.get('id_ref') as string,
       so_tien: parseFloat(formData.get('so_tien') as string) || 0,
     };
@@ -140,23 +140,11 @@ const ThanhToanNhapDialog: React.FC<ThanhToanNhapDialogProps> = ({ isOpen, onClo
               </div>
 
               <div className="grid grid-cols-1 gap-5">
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Hash size={14} className="text-slate-400" /> ID Thanh toán <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="ma_thanh_toan"
-                    required
-                    defaultValue={initialData?.ma_thanh_toan || ''}
-                    placeholder="Mã chứng từ chi..."
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder-slate-400"
-                  />
-                </div>
+                  {/* ID Thanh toán is now auto-generated, removing manual input */}
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Link size={14} className="text-slate-400" /> Liên kết Phiếu Nhập (REF) <span className="text-red-500 font-bold">*</span>
+                    <Link size={14} className="text-slate-400" /> ID Ref (Phiếu nhập) <span className="text-red-500 font-bold">*</span>
                   </label>
                   <div className="relative">
                     <select
@@ -167,7 +155,7 @@ const ThanhToanNhapDialog: React.FC<ThanhToanNhapDialogProps> = ({ isOpen, onClo
                     >
                       <option value="">Chọn phiếu nhập liên quan...</option>
                       {receipts.map(r => (
-                        <option key={r.id} value={r.id}>{r.so_phieu}</option>
+                        <option key={r.id} value={r.id}>{r.id_nhap}</option>
                       ))}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
@@ -210,7 +198,7 @@ const ThanhToanNhapDialog: React.FC<ThanhToanNhapDialogProps> = ({ isOpen, onClo
             className="px-8 py-2.5 bg-emerald-600 text-white rounded-xl text-[14px] font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={20} />
-            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Xác nhận chi'} 
+            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm thanh toán'} 
             <ChevronRight size={20} className="ml-0.5" />
           </button>
         </div>

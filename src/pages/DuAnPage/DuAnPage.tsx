@@ -114,8 +114,6 @@ const DuAnPage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Hành chính</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Dự án</span>
             </nav>
           </div>
@@ -180,7 +178,7 @@ const DuAnPage: React.FC = () => {
               <input
                 type="text"
                 className="w-full pl-9 pr-4 py-1.5 border border-slate-200 rounded text-[13px] focus:ring-1 focus:ring-[#2563eb] focus:border-[#2563eb] outline-none placeholder-slate-400 transition-all font-medium text-slate-700 shadow-sm"
-                placeholder="Tìm mã, tên dự án, khách hàng..."
+                placeholder="Tìm mã dự án, tên dự án, khách hàng..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -209,7 +207,7 @@ const DuAnPage: React.FC = () => {
                   <th className="px-4 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox" />
                   </th>
-                  <th className="px-4 py-3">Mã DA</th>
+                  <th className="px-4 py-3">Mã Dự Án</th>
                   <th className="px-4 py-3">Tên Dự Án</th>
                   <th className="px-4 py-3 text-center">Khách hàng</th>
                   <th className="px-4 py-3">Địa chỉ</th>

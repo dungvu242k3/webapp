@@ -34,6 +34,7 @@ interface NhapHangChiTietData {
   so_luong_m3: number;
   don_gia_vnd: number;
   nhap_hang?: {
+    id_nhap: string;
     so_phieu: string;
   };
 }
@@ -58,6 +59,7 @@ const NhapHangChiTietPage: React.FC = () => {
         .select(`
           *,
           nhap_hang (
+            id_nhap,
             so_phieu
           )
         `)
@@ -68,7 +70,7 @@ const NhapHangChiTietPage: React.FC = () => {
       // Tải danh sách phiếu nhập để làm dữ liệu select trong Dialog
       const { data: receiptsData, error: receiptsError } = await supabase
         .from('nhap_hang')
-        .select('id, so_phieu')
+        .select('id, id_nhap, so_phieu')
         .order('created_at', { ascending: false });
       if (receiptsError) throw receiptsError;
       setReceipts(receiptsData || []);
@@ -125,6 +127,7 @@ const NhapHangChiTietPage: React.FC = () => {
   const filteredData = data.filter(item => 
     item.ma_hang.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.kho.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.nhap_hang?.id_nhap && item.nhap_hang.id_nhap.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (item.nhap_hang?.so_phieu && item.nhap_hang.so_phieu.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
@@ -142,8 +145,6 @@ const NhapHangChiTietPage: React.FC = () => {
                 <Home size={18} className="text-slate-400" />
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
-              <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Kho vận</button>
               <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Chi tiết nhập hàng</span>
             </nav>
@@ -232,30 +233,33 @@ const NhapHangChiTietPage: React.FC = () => {
         {/* Data Table Matching Template */}
         <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden text-[13px]">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[1200px]">
+            <table className="w-full text-left border-collapse min-w-[1800px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wider">
                   <th className="px-3 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-3 py-3 w-[150px]">Lô Nhập (ID Ref)</th>
-                  <th className="px-3 py-3 w-[120px]">Mã Hàng</th>
-                  <th className="px-3 py-3">Kho & Hành động</th>
-                  <th className="px-3 py-3 text-center">Tỷ Trọng</th>
-                  <th className="px-3 py-3 text-center">Số Lượng (Tấn)</th>
-                  <th className="px-3 py-3 text-center">Số Lượng (m3)</th>
-                  <th className="px-3 py-3 text-right">Đơn giá (VND)</th>
+                  <th className="px-3 py-3 w-[160px]">ID</th>
+                  <th className="px-3 py-3 w-[160px]">ID Ref</th>
+                  <th className="px-3 py-3 w-[160px]">Mã Hàng</th>
+                  <th className="px-3 py-3 w-[160px]">Kho</th>
+                  <th className="px-3 py-3 w-[160px]">Hành động</th>
+                  <th className="px-3 py-3 w-[160px]">Loại nhập số</th>
+                  <th className="px-3 py-3 w-[160px] text-center">Tỷ Trọng (Lưu)</th>
+                  <th className="px-3 py-3 w-[160px] text-center">Số Lượng (Tấn)</th>
+                  <th className="px-3 py-3 w-[160px] text-center">Số Lượng (m3)</th>
+                  <th className="px-3 py-3 w-[160px] text-right">Đơn giá (VND)</th>
                   <th className="px-3 py-3 text-center w-[100px]">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải chi Tiết nhập hàng...</td>
+                    <td colSpan={12} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải chi Tiết nhập hàng...</td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-6 py-12 text-center text-slate-400 font-medium italic">Hiện chưa có dữ liệu chi tiết</td>
+                    <td colSpan={12} className="px-6 py-12 text-center text-slate-400 font-medium italic">Hiện chưa có dữ liệu chi tiết</td>
                   </tr>
                 ) : (
                   filteredData.map((item) => (
@@ -264,41 +268,44 @@ const NhapHangChiTietPage: React.FC = () => {
                         <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-0.5">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold">
-                            <LinkIcon size={12} className="text-slate-400" /> {item.nhap_hang?.so_phieu || 'Chưa gán'}
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase font-bold truncate max-w-[100px]">{item.id_ref}</span>
+                        <span className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase font-bold truncate max-w-[120px]" title={item.id}>{item.id}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-900 font-bold">
+                          <LinkIcon size={12} className="text-slate-400" /> {item.nhap_hang?.id_nhap || 'Chưa gán'}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex items-center gap-2 text-slate-700 font-bold">
-                           <Package size={14} className="text-slate-400" />
+                        <div className="flex items-center gap-2 text-slate-700 font-bold text-[11px]">
+                           <Package size={13} className="text-slate-400" />
                            {item.ma_hang}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold">
-                            <Warehouse size={12} className="text-slate-400" /> {item.kho}
-                          </div>
-                          <span className="text-[11px] text-slate-500 font-medium">{item.hanh_dong || 'N/A'}</span>
+                        <div className="flex items-center gap-1.5 text-slate-900 font-bold text-[11px]">
+                          <Warehouse size={12} className="text-slate-400" /> {item.kho}
                         </div>
                       </td>
-                      <td className="px-3 py-4 text-center tabular-nums font-bold text-slate-600">
+                      <td className="px-3 py-4 text-slate-500 font-medium text-[11px]">
+                        {item.hanh_dong || '—'}
+                      </td>
+                      <td className="px-3 py-4 text-slate-500 font-medium text-[11px] text-center italic">
+                        {item.loai_nhap_so || '—'}
+                      </td>
+                      <td className="px-3 py-4 text-center tabular-nums font-bold text-slate-600 text-[11px]">
                         {item.ty_trong_luu.toFixed(4)}
                       </td>
                       <td className="px-3 py-4 text-center">
-                        <span className="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded text-[11px] font-bold tabular-nums">
-                           {item.so_luong_tan.toFixed(3)} Tấn
+                        <span className="px-2 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded text-[10px] font-bold tabular-nums">
+                           {item.so_luong_tan.toFixed(3)} T
                         </span>
                       </td>
                       <td className="px-3 py-4 text-center">
-                        <span className="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded text-[11px] font-bold tabular-nums">
+                        <span className="px-2 py-1 bg-blue-50 text-blue-700 border border-blue-100 rounded text-[10px] font-bold tabular-nums">
                            {item.so_luong_m3.toFixed(3)} m³
                         </span>
                       </td>
-                      <td className="px-3 py-4 text-right font-bold text-[#2563eb] tabular-nums">
+                      <td className="px-3 py-4 text-right font-bold text-[#2563eb] tabular-nums text-[12px]">
                         {formatCurrency(item.don_gia_vnd)}
                       </td>
                       <td className="px-3 py-4">
@@ -339,7 +346,6 @@ const NhapHangChiTietPage: React.FC = () => {
         initialData={selectedItem}
         onSuccess={fetchNhapHangChiTiet}
         receipts={receipts}
-        items={[]}
       />
     </div>
   );

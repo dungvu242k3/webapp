@@ -116,8 +116,6 @@ const PhanQuyenPage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Hệ thống</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Phân quyền</span>
             </nav>
           </div>
@@ -212,7 +210,8 @@ const PhanQuyenPage: React.FC = () => {
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
                   <th className="px-4 py-3 w-[120px]">ID Phân Quyền</th>
-                  <th className="px-4 py-3">Nhân Viên & Email</th>
+                  <th className="px-4 py-3">Tên Nhân Viên</th>
+                  <th className="px-4 py-3">Email</th>
                   <th className="px-4 py-3 text-center">Vai Trò</th>
                   <th className="px-4 py-3">Dự Án Được Xem</th>
                   <th className="px-4 py-3 text-center">Thao tác</th>
@@ -221,11 +220,11 @@ const PhanQuyenPage: React.FC = () => {
               <tbody className="divide-y divide-slate-100 text-[13px]">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải dữ liệu phân quyền...</td>
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium italic">Đang tải dữ liệu phân quyền...</td>
                   </tr>
                 ) : filteredData.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-12 text-center text-slate-400 font-medium italic">Chưa có thiết lập phân quyền nào</td>
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-400 font-medium italic">Chưa có thiết lập phân quyền nào</td>
                   </tr>
                 ) : (
                   filteredData.map((item) => (
@@ -237,14 +236,12 @@ const PhanQuyenPage: React.FC = () => {
                         <span className="text-slate-400 font-bold uppercase font-mono tracking-tighter">{item.id_phan_quyen}</span>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex flex-col gap-0.5">
-                          <div className="flex items-center gap-2">
-                            <span className="text-slate-900 font-bold">{item.ten_nhan_vien}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-500 text-[12px]">
-                             <Mail size={12} className="text-slate-400" />
-                             <span>{item.email_nhan_vien}</span>
-                          </div>
+                        <span className="text-slate-900 font-bold">{item.ten_nhan_vien}</span>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+                          <Mail size={14} className="text-slate-400" />
+                          <span>{item.email_nhan_vien}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4 text-center">

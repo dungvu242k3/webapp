@@ -53,7 +53,7 @@ const ThanhToanXuatDialog: React.FC<ThanhToanXuatDialogProps> = ({ isOpen, onClo
 
     const formData = new FormData(e.currentTarget);
     const data = {
-      ma_thanh_toan: formData.get('ma_thanh_toan') as string,
+      ma_thanh_toan: initialData?.ma_thanh_toan || `TTX-${Date.now()}`,
       id_ref: formData.get('id_ref') as string,
       so_tien: parseFloat(formData.get('so_tien') as string) || 0,
     };
@@ -140,23 +140,11 @@ const ThanhToanXuatDialog: React.FC<ThanhToanXuatDialogProps> = ({ isOpen, onClo
               </div>
 
               <div className="grid grid-cols-1 gap-5">
-                <div className="space-y-1.5">
-                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Hash size={14} className="text-slate-400" /> ID Chứng từ thu <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="ma_thanh_toan"
-                    required
-                    defaultValue={initialData?.ma_thanh_toan || ''}
-                    placeholder="Mã phiếu thu tiền..."
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition-all placeholder-slate-400"
-                  />
-                </div>
+                  {/* ID Thanh toán is now auto-generated, removing manual input */}
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Link size={14} className="text-slate-400" /> Liên kết Đơn bán (REF) <span className="text-red-500 font-bold">*</span>
+                    <Link size={14} className="text-slate-400" /> ID Ref (Vận đơn) <span className="text-red-500 font-bold">*</span>
                   </label>
                   <div className="relative">
                     <select
@@ -210,7 +198,7 @@ const ThanhToanXuatDialog: React.FC<ThanhToanXuatDialogProps> = ({ isOpen, onClo
             className="px-8 py-2.5 bg-pink-600 text-white rounded-xl text-[14px] font-bold hover:bg-pink-700 shadow-lg shadow-pink-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={20} />
-            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Xác nhận thu'} 
+            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Thêm thanh toán'} 
             <ChevronRight size={20} className="ml-0.5" />
           </button>
         </div>

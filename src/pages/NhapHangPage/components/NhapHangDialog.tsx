@@ -72,13 +72,13 @@ const NhapHangDialog = ({ isOpen, onClose, onSuccess, initialData }: NhapHangDia
     try {
       if (initialData) {
         const { error: updateError } = await supabase
-          .from('receipts')
+          .from('nhap_hang')
           .update(data)
           .eq('id', initialData.id);
         if (updateError) throw updateError;
       } else {
         const { error: insertError } = await supabase
-          .from('receipts')
+          .from('nhap_hang')
           .insert([data]);
         if (insertError) throw insertError;
       }

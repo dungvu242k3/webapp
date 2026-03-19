@@ -111,8 +111,6 @@ const DonViVanChuyenPage: React.FC = () => {
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
               <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Danh mục</button>
-              <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Đơn vị vận chuyển</span>
             </nav>
           </div>
@@ -206,8 +204,8 @@ const DonViVanChuyenPage: React.FC = () => {
                   <th className="px-4 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-4 py-3 w-[150px]">ID DVVC</th>
-                  <th className="px-4 py-3">TÊN ĐƠN VỊ VẬN CHUYỂN</th>
+                  <th className="px-4 py-3 w-[150px]">ID</th>
+                  <th className="px-4 py-3">Tên DVVC</th>
                   <th className="px-4 py-3 text-center w-[120px]">Thao tác</th>
                 </tr>
               </thead>

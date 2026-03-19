@@ -23,13 +23,11 @@ import { supabase } from '../../lib/supabase';
 import ThanhToanNhapDialog from './components/ThanhToanNhapDialog';
 
 interface ThanhToanNhapData {
-  id: string;
-  ma_thanh_toan: string;
+  id: string; // This is the UUID
+  ma_thanh_toan: string; // This is the user-friendly ID
   id_ref: string;
   so_tien: number;
-  nhap_hang?: {
-    so_phieu: string;
-  };
+  id_nhap?: string; // Flattened from nhap_hang relation
 }
 
 const ThanhToanNhapPage: React.FC = () => {
@@ -48,14 +46,22 @@ const ThanhToanNhapPage: React.FC = () => {
       const { data: res, error } = await supabase
         .from('thanh_toan_nhap')
         .select(`
-          *,
+          id,
+          ma_thanh_toan,
+          id_ref,
+          so_tien,
           nhap_hang (
-            so_phieu
+            id_nhap
           )
         `)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      setData(res || []);
+      
+      const flattenedData = (res || []).map((item: any) => ({
+        ...item,
+        id_nhap: Array.isArray(item.nhap_hang) ? item.nhap_hang[0]?.id_nhap : item.nhap_hang?.id_nhap
+      }));
+      setData(flattenedData);
     } catch (err) {
       console.error('Lỗi khi tải danh sách thanh toán:', err);
     } finally {
@@ -106,8 +112,8 @@ const ThanhToanNhapPage: React.FC = () => {
   };
 
   const filteredData = data.filter(item => 
-    item.ma_thanh_toan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (item.nhap_hang?.so_phieu && item.nhap_hang.so_phieu.toLowerCase().includes(searchTerm.toLowerCase()))
+    item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.id_nhap && item.id_nhap.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -124,8 +130,6 @@ const ThanhToanNhapPage: React.FC = () => {
                 <Home size={18} className="text-slate-400" />
                 <button onClick={() => navigate('/')} className="text-slate-500 hover:text-[#2563eb] transition-colors">Trang chủ</button>
               </div>
-              <ChevronRight size={14} className="text-slate-300" />
-              <button className="text-slate-500 hover:text-[#2563eb] transition-colors">Tài chính</button>
               <ChevronRight size={14} className="text-slate-300" />
               <span className="bg-[#2563eb] text-white px-2.5 py-0.5 rounded-md font-medium text-[13px]">Thanh toán nhập</span>
             </nav>
@@ -172,7 +176,7 @@ const ThanhToanNhapPage: React.FC = () => {
                 : "text-slate-500 hover:text-slate-700 bg-transparent shadow-none border-none"
             )}
           >
-            <Folder size={18} /> Nhật ký thanh toán nhập hàng
+            <Folder size={18} /> Thanh toán nhập hàng
           </button>
         </div>
 
@@ -191,7 +195,7 @@ const ThanhToanNhapPage: React.FC = () => {
               <input
                 type="text"
                 className="w-full pl-9 pr-4 py-1.5 border border-slate-200 rounded text-[13px] focus:ring-1 focus:ring-[#2563eb] focus:border-[#2563eb] outline-none placeholder-slate-400 transition-all font-medium text-slate-700 shadow-sm"
-                placeholder="Tìm mã thanh toán, số phiếu..."
+                placeholder="Tìm mã ID, ID Ref..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -204,9 +208,9 @@ const ThanhToanNhapPage: React.FC = () => {
             </button>
             <button
               onClick={handleAdd}
-              className="bg-green-600 hover:bg-green-700 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-green-500/10"
+              className="bg-[#2563eb] hover:bg-[#2563eb]/90 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-blue-500/10"
             >
-              <Plus size={20} /> Lập thanh toán
+              <Plus size={20} /> Thêm thanh toán
             </button>
           </div>
         </div>
@@ -220,8 +224,8 @@ const ThanhToanNhapPage: React.FC = () => {
                   <th className="px-4 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-4 py-3 w-[150px]">ID Thanh toán</th>
-                  <th className="px-4 py-3">Phiếu Nhập Gốc (ID REF)</th>
+                  <th className="px-4 py-3 w-[250px]">ID</th>
+                  <th className="px-4 py-3 w-[200px]">ID Ref</th>
                   <th className="px-4 py-3 text-right">Số Tiền (VND)</th>
                   <th className="px-4 py-3 text-center w-[120px]">Thao tác</th>
                 </tr>
@@ -244,19 +248,18 @@ const ThanhToanNhapPage: React.FC = () => {
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2">
                            <Hash size={14} className="text-slate-400" />
-                           <span className="text-slate-400 font-mono font-bold tracking-tighter uppercase">{item.ma_thanh_toan}</span>
+                           <span className="text-[11px] text-slate-400 font-mono font-bold tracking-tighter uppercase truncate max-w-[180px]" title={item.id}>{item.id}</span>
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2.5 text-slate-900 font-bold">
-                           <Link size={16} className="text-slate-400" />
-                           {item.nhap_hang?.so_phieu || 'Chưa gán'}
-                           <span className="text-[10px] text-slate-300 font-mono ml-2">({item.id_ref})</span>
+                           <Link size={15} className="text-slate-400" />
+                           {item.id_nhap || 'Chưa gán'}
                         </div>
                       </td>
                       <td className="px-4 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 text-green-600 font-bold tabular-nums">
-                           <DollarSign size={14} className="text-green-400" />
+                        <div className="flex items-center justify-end gap-2 text-[#2563eb] font-bold tabular-nums">
+                           <DollarSign size={14} className="text-blue-400" />
                            {formatCurrency(item.so_tien)}
                         </div>
                       </td>
