@@ -1,82 +1,159 @@
 import React, { useState } from 'react';
-import { ActionCard } from '../components/ui/ActionCard';
-import type { ActionCardProps } from '../components/ui/ActionCard';
-import { FileText, Users, Megaphone, Wallet, ShoppingCart, Box, Layers, Bot, Copyright, Search } from 'lucide-react';
+import { Search, Box, Receipt, Coins, Users, Clock, Briefcase, ShieldCheck, UserCog, Download, FileText, Filter, Wallet, HandCoins, Truck, Upload, FileSpreadsheet, Warehouse, Building2, MapPin, Navigation } from 'lucide-react';
 import { clsx } from 'clsx';
-import { moduleData } from '../data/moduleData';
 import { ModuleCard } from '../components/ui/ModuleCard';
 
-const dashboardModules: ActionCardProps[] = [
-  {
-    icon: FileText,
-    title: 'Hành chính',
-    description: 'Công văn, hợp đồng, văn thư lưu trữ.',
-    href: '/hanh-chinh',
-    colorScheme: 'orange'
-  },
-  {
-    icon: Users,
-    title: 'Nhân sự',
-    description: 'Tuyển dụng, đào tạo, chấm công, lương.',
-    href: '/nhan-su',
-    colorScheme: 'emerald'
-  },
-  {
-    icon: Megaphone,
-    title: 'Marketing',
-    description: 'Chiến dịch, khách hàng, báo cáo marketing.',
-    href: '/marketing',
-    colorScheme: 'pink'
-  },
-  {
-    icon: Wallet,
-    title: 'Tài chính',
-    description: 'Kế toán, ngân sách, báo cáo tài chính.',
-    href: '/tai-chinh',
-    colorScheme: 'blue'
-  },
-  {
-    icon: ShoppingCart,
-    title: 'Mua hàng',
-    description: 'Đặt hàng, nhà cung cấp, đấu thầu.',
-    href: '/mua-hang',
-    colorScheme: 'orange'
-  },
-  {
-    icon: Box,
-    title: 'Kho vận',
-    description: 'Tồn kho, xuất nhập kho, vận chuyển.',
-    href: '/kho-van',
-    colorScheme: 'cyan'
-  },
-  {
-    icon: Layers,
-    title: 'Hệ thống',
-    description: 'Cấu hình, phân quyền và nhân sự.',
-    href: '/he-thong',
-    colorScheme: 'slate' as any // Will update colorMap in ActionCard to handle slate instead of adding custom one
-  },
-  {
-    icon: Bot,
-    title: 'Trợ lý AI',
-    description: 'Cấu hình, phân quyền và nhân sự.',
-    href: '/tro-ly-ai',
-    colorScheme: 'purple'
-  },
-  {
-    icon: Copyright,
-    title: 'Thông tin bản quyền',
-    description: 'Quản lý sở hữu trí tuệ và thông tin nhà phát triển.',
-    href: '/ban-quyen',
-    colorScheme: 'blue'
-  }
-];
-
 const Dashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'chuc-nang' | 'danh-dau' | 'tat-ca'>('chuc-nang');
+  const [activeTab, setActiveTab] = useState<'chuc-nang' | 'danh-dau' | 'tat-ca'>('tat-ca');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const allSections = Object.values(moduleData).flat();
+  const allModules = [
+    {
+      icon: Box,
+      title: "Danh mục hàng",
+      description: "Quản lý danh mục hàng hóa.",
+      colorScheme: "blue" as const,
+      path: "/danh-muc-hang"
+    },
+    {
+      icon: Receipt,
+      title: "Công nợ",
+      description: "Quản lý công nợ tổng thể.",
+      colorScheme: "amber" as const,
+      path: "/cong-no"
+    },
+    {
+      icon: Coins,
+      title: "Công nợ bán",
+      description: "Theo dõi nợ của khách hàng.",
+      colorScheme: "orange" as const,
+      path: "/cong-no-ban"
+    },
+    {
+      icon: Users,
+      title: "Khách hàng",
+      description: "Quản lý danh sách khách hàng.",
+      colorScheme: "blue" as const,
+      path: "/kinh-doanh"
+    },
+    {
+      icon: Clock,
+      title: "Đợi xe",
+      description: "Điều phối xe vận chuyển hàng.",
+      colorScheme: "slate" as const,
+      path: "/doi-xe"
+    },
+    {
+      icon: Briefcase,
+      title: "Dự án",
+      description: "Quản lý các dự án hiện có.",
+      colorScheme: "purple" as const,
+      path: "/du-an"
+    },
+    {
+      icon: ShieldCheck,
+      title: "Phân quyền",
+      description: "Thiết lập quyền người dùng.",
+      colorScheme: "red" as const,
+      path: "/phan-quyen"
+    },
+    {
+      icon: UserCog,
+      title: "Nhân sự",
+      description: "Quản lý nhân viên công ty.",
+      colorScheme: "emerald" as const,
+      path: "/nhan-su"
+    },
+    {
+      icon: Download,
+      title: "Nhập hàng",
+      description: "Quy trình nhập kho tổng quát.",
+      colorScheme: "cyan" as const,
+      path: "/nhap-hang"
+    },
+    {
+      icon: FileText,
+      title: "Nhập hàng CT",
+      description: "Chi tiết các đợt nhập hàng.",
+      colorScheme: "blue" as const,
+      path: "/nhap-hang-ct"
+    },
+    {
+      icon: Filter,
+      title: "Lọc tồn kho",
+      description: "Kiểm tra số dư kho hàng.",
+      colorScheme: "teal" as const,
+      path: "/loc-ton-kho"
+    },
+    {
+      icon: Wallet,
+      title: "Thanh toán nhập",
+      description: "Chi trả tiền hàng cho NCC.",
+      colorScheme: "green" as const,
+      path: "/thanh-toan-nhap"
+    },
+    {
+      icon: HandCoins,
+      title: "Thanh toán xuất",
+      description: "Thu tiền từ khách hàng.",
+      colorScheme: "pink" as const,
+      path: "/thanh-toan-xuat"
+    },
+    {
+      icon: Truck,
+      title: "Đơn vị vận chuyển",
+      description: "Đối tác giao nhận của kho.",
+      colorScheme: "slate" as const,
+      path: "/don-vi-van-chuyen"
+    },
+    {
+      icon: Upload,
+      title: "Xuất hàng",
+      description: "Quy trình xuất kho hàng hóa.",
+      colorScheme: "blue" as const,
+      path: "/xuat-hang"
+    },
+    {
+      icon: FileSpreadsheet,
+      title: "Xuất hàng CT",
+      description: "Chi tiết các đợt xuất hàng.",
+      colorScheme: "cyan" as const,
+      path: "/xuat-hang-ct"
+    },
+    {
+      icon: Warehouse,
+      title: "Loại kho",
+      description: "Phân loại các vị trí lưu trữ.",
+      colorScheme: "purple" as const,
+      path: "/loai-kho"
+    },
+    {
+      icon: Building2,
+      title: "Nhà cung cấp",
+      description: "Quản lý đối tác cung ứng.",
+      colorScheme: "teal" as const,
+      path: "/nha-cung-cap"
+    },
+    {
+      icon: MapPin,
+      title: "Địa chỉ mua",
+      description: "Địa điểm thu mua hàng hóa.",
+      colorScheme: "orange" as const,
+      path: "/dia-chi-mua"
+    },
+    {
+      icon: Navigation,
+      title: "Địa chỉ giao",
+      description: "Các điểm giao nhận cụ thể.",
+      colorScheme: "emerald" as const,
+      path: "/dia-chi-giao"
+    }
+  ];
+
+  const filteredModules = allModules.filter(module => 
+    module.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    module.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -141,53 +218,25 @@ const Dashboard: React.FC = () => {
         )}
       </div>
 
-      {activeTab === 'chuc-nang' && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-5">
-          {dashboardModules.map((module, idx) => (
-            <ActionCard
-              key={idx}
-              {...module}
+      {activeTab === 'tat-ca' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 animate-in fade-in duration-500">
+          {filteredModules.map((module, index) => (
+            <ModuleCard
+              key={index}
+              icon={module.icon}
+              title={module.title}
+              description={module.description}
+              colorScheme={module.colorScheme}
+              path={module.path}
             />
           ))}
         </div>
       )}
 
-      {activeTab === 'danh-dau' && (
-        <div className="text-center py-12 text-muted-foreground bg-card rounded-2xl border border-border border-dashed">
-          Chưa có module nào được đánh dấu.
-        </div>
-      )}
-
-      {activeTab === 'tat-ca' && (
-        <div className="space-y-8 animate-in fade-in duration-500">
-          <div className="space-y-8">
-            {allSections.map((section, idx) => {
-              const filteredItems = section.items.filter(item => 
-                item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                item.description.toLowerCase().includes(searchQuery.toLowerCase())
-              );
-
-              if (filteredItems.length === 0) return null;
-
-              return (
-                <div key={idx} className="animate-in fade-in slide-in-from-bottom-2 duration-500" style={{ animationDelay: `${idx * 50}ms` }}>
-                  <h2 className="text-[14px] font-bold text-primary mb-3 flex items-center gap-3">
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className="w-1 h-4 bg-primary rounded-full"></span>
-                      <span>{section.section}</span>
-                    </div>
-                    <div className="h-px flex-1 bg-border/60"></div>
-                  </h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                    {filteredItems.map((item, itemIdx) => (
-                      <ModuleCard key={itemIdx} {...item} />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {(activeTab === 'chuc-nang' || activeTab === 'danh-dau') && (
+        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground animate-in fade-in duration-500">
+          <Box size={48} className="mb-4 opacity-20" />
+          <p className="text-[14px]">Hiện chưa có mục nào được hiển thị ở đây.</p>
         </div>
       )}
     </div>

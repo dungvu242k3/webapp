@@ -45,7 +45,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       onClick={handleClick}
       className={clsx(
         "group flex items-center bg-card rounded-xl p-4 transition-all duration-300 border border-border hover:border-primary/30 hover:shadow-sm cursor-pointer hover:-translate-y-0.5",
-        !path && "opacity-60 grayscale-[0.5] cursor-not-allowed hover:translate-y-0 hover:border-border"
+        !path && "cursor-not-allowed hover:translate-y-0 hover:border-border"
       )}
     >
       <div 
@@ -58,10 +58,10 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       </div>
       
       <div className="flex-1 min-w-0 pr-2">
-        <h3 className="font-bold text-[14px] text-foreground mb-0.5 truncate transition-colors">
+        <h3 className={clsx("font-bold text-[14px] mb-0.5 truncate transition-colors", !path ? "text-white" : "text-foreground")}>
           {title}
         </h3>
-        <p className="text-[12px] text-muted-foreground truncate leading-snug">
+        <p className={clsx("text-[12px] truncate leading-snug", !path ? "text-white/80" : "text-muted-foreground")}>
           {description}
         </p>
       </div>

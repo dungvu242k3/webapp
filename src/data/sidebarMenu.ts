@@ -8,7 +8,8 @@ import {
   Box,
   Layers,
   Bot,
-  Copyright
+  Copyright,
+  Package
 } from 'lucide-react';
 import React from 'react';
 
@@ -21,6 +22,7 @@ export type SidebarItem = {
 export const sidebarMenu: SidebarItem[] = [
   { icon: Home, label: 'Trang chủ', path: '/' },
   { icon: FileText, label: 'Hành chính', path: '/hanh-chinh' },
+  { icon: Package, label: 'Danh mục hàng', path: '/danh-muc-hang' },
   { icon: Users, label: 'Nhân sự', path: '/nhan-su' },
   { icon: Megaphone, label: 'Marketing', path: '/marketing' },
   { icon: Wallet, label: 'Tài chính', path: '/tai-chinh' },
