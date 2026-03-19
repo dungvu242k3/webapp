@@ -23,11 +23,10 @@ interface XuatHangChiTietDialogProps {
   onClose: () => void;
   onSuccess: () => void;
   issues: any[];
-  items: any[];
   initialData?: any;
 }
 
-const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, initialData }: XuatHangChiTietDialogProps) => {
+const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, initialData }: XuatHangChiTietDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -38,6 +37,23 @@ const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, init
       setIsClosing(false);
       setError(null);
       setTyTrong(initialData?.ty_trong || 0);
+    }
+  }, [isOpen, initialData]);
+
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'CT-';
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
     }
   }, [isOpen, initialData]);
 
@@ -61,6 +77,7 @@ const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, init
       ma_hang: formData.get('ma_hang'),
       kho: formData.get('kho'),
       hanh_dong: formData.get('hanh_dong'),
+      loai_nhap_so: formData.get('loai_nhap_so'),
       ty_trong: parseFloat(formData.get('ty_trong') as string) || 0,
       so_luong_tan: parseFloat(formData.get('so_luong_tan') as string) || 0,
       so_luong_m3: parseFloat(formData.get('so_luong_m3') as string) || 0,
@@ -71,13 +88,13 @@ const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, init
     try {
       if (initialData) {
         const { error: updateError } = await supabase
-          .from('issue_items')
+          .from('xuat_hang_chi_tiet')
           .update(data)
           .eq('id', initialData.id);
         if (updateError) throw updateError;
       } else {
         const { error: insertError } = await supabase
-          .from('issue_items')
+          .from('xuat_hang_chi_tiet')
           .insert([data]);
         if (insertError) throw insertError;
       }
@@ -138,111 +155,119 @@ const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, init
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="size-6 rounded-md bg-cyan-500/10 flex items-center justify-center text-cyan-600">
-                    <Hash size={14} />
-                  </div>
-                  <h3 className="text-[12px] font-bold text-cyan-600 uppercase tracking-wider">Thông tin định danh</h3>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                      <Hash size={14} className="text-slate-400" /> ID Chi tiết <span className="text-red-500 font-bold">*</span>
-                    </label>
-                    <input type="text" name="ma_ct" required defaultValue={initialData?.ma_ct || ''} placeholder="Mã dòng chi tiết..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                      <Link size={14} className="text-slate-400" /> Liên kết Phiếu Xuất <span className="text-red-500 font-bold">*</span>
-                    </label>
-                    <div className="relative">
-                      <select name="id_ref" required defaultValue={initialData?.id_ref || ''} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all appearance-none cursor-pointer">
-                        <option value="">Chọn phiếu xuất...</option>
-                        {issues.map(i => <option key={i.id} value={i.id}>{i.ma_xuat}</option>)}
-                      </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <ChevronRight size={18} className="rotate-90" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Package size={14} className="text-slate-400" /> Mã Hàng
-                      </label>
-                      <input type="text" name="ma_hang" defaultValue={initialData?.ma_hang || ''} placeholder="Mã SP..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Warehouse size={14} className="text-slate-400" /> Kho xuất
-                      </label>
-                      <input type="text" name="kho" defaultValue={initialData?.kho || ''} placeholder="Kho..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
-                    </div>
-                  </div>
-                </div>
+            <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+              <div className="px-5 py-3 border-b border-slate-100 bg-slate-50/50 flex items-center gap-2">
+                <Hash size={16} className="text-cyan-600" />
+                <span className="text-[12px] font-bold text-slate-700 uppercase">Thông tin chi tiết dòng hàng</span>
               </div>
-
-              <div className="bg-white p-5 rounded-2xl border border-slate-200/60 shadow-sm space-y-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="size-6 rounded-md bg-cyan-500/10 flex items-center justify-center text-cyan-600">
-                    <Scale size={14} />
-                  </div>
-                  <h3 className="text-[12px] font-bold text-cyan-600 uppercase tracking-wider">Khối lượng & Đơn giá</h3>
+              
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                {/* 1. ID */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Hash size={14} className="text-slate-400" /> ID <span className="text-red-500">*</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    name="ma_ct" 
+                    readOnly
+                    required 
+                    value={initialData?.ma_ct || generatedId} 
+                    className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 cursor-not-allowed italic" 
+                  />
                 </div>
 
-                <div className="grid grid-cols-1 gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Activity size={14} className="text-slate-400" /> Hành động
-                      </label>
-                      <input type="text" name="hanh_dong" defaultValue={initialData?.hanh_dong || ''} placeholder="Lý do xuất..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Scale size={14} className="text-slate-400" /> Tỷ Trọng
-                      </label>
-                      <input type="number" step="0.0001" name="ty_trong" value={tyTrong} onChange={(e) => setTyTrong(parseFloat(e.target.value) || 0)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Box size={14} className="text-slate-400" /> Số Lượng (Tấn)
-                      </label>
-                      <input type="number" step="0.001" name="so_luong_tan" defaultValue={initialData?.so_luong_tan || 0} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Box size={14} className="text-slate-400" /> Số Lượng (m3)
-                      </label>
-                      <input type="number" step="0.001" name="so_luong_m3" defaultValue={initialData?.so_luong_m3 || 0} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
+                {/* 2. ID Ref */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Link size={14} className="text-slate-400" /> ID Ref <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <select name="id_ref" required defaultValue={initialData?.id_ref || ''} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all appearance-none cursor-pointer">
+                      <option value="">Chọn phiếu xuất...</option>
+                      {issues.map(i => <option key={i.id} value={i.id}>{i.ma_xuat}</option>)}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <ChevronRight size={18} className="rotate-90" />
                     </div>
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <Database size={14} className="text-slate-400" /> Sử dụng tồn từ
-                      </label>
-                      <input type="text" name="su_dung_ton_tu" defaultValue={initialData?.su_dung_ton_tu || ''} placeholder="Lô/Ngày..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                        <DollarSign size={14} className="text-slate-400" /> Đơn giá (VND)
-                      </label>
-                      <div className="relative">
-                        <input type="number" name="don_gia" defaultValue={initialData?.don_gia || 0} className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-cyan-600 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[14px]">₫</span>
-                      </div>
-                    </div>
+                {/* 3. Mã Hàng */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Package size={14} className="text-slate-400" /> Mã Hàng
+                  </label>
+                  <input type="text" name="ma_hang" defaultValue={initialData?.ma_hang || ''} placeholder="Mã sản phẩm..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
+                </div>
+
+                {/* 4. Kho */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Warehouse size={14} className="text-slate-400" /> Kho
+                  </label>
+                  <input type="text" name="kho" defaultValue={initialData?.kho || ''} placeholder="Tên kho..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
+                </div>
+
+                {/* 5. Hành động */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Activity size={14} className="text-slate-400" /> Hành động
+                  </label>
+                  <input type="text" name="hanh_dong" defaultValue={initialData?.hanh_dong || ''} placeholder="Lý do xuất..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
+                </div>
+
+                {/* 6. Loại nhập số */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Activity size={14} className="text-slate-400" /> Loại nhập số
+                  </label>
+                  <input type="text" name="loai_nhap_so" defaultValue={initialData?.loai_nhap_so || ''} placeholder="Tấn/Khối..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
+                </div>
+
+                {/* 7. Tỷ Trọng */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Scale size={14} className="text-slate-400" /> Tỷ Trọng (Lưu)
+                  </label>
+                  <input type="number" step="0.0001" name="ty_trong" value={tyTrong} onChange={(e) => setTyTrong(parseFloat(e.target.value) || 0)} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
+                </div>
+
+                {/* Gap for alignment */}
+                <div className="hidden md:block"></div>
+
+                {/* 8. Số Lượng (Tấn) */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Box size={14} className="text-slate-400" /> Số Lượng (Tấn)
+                  </label>
+                  <input type="number" step="0.001" name="so_luong_tan" defaultValue={initialData?.so_luong_tan || 0} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-cyan-600 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
+                </div>
+
+                {/* 9. Số Lượng (m3) */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Box size={14} className="text-slate-400" /> Số Lượng (m3)
+                  </label>
+                  <input type="number" step="0.001" name="so_luong_m3" defaultValue={initialData?.so_luong_m3 || 0} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-blue-600 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
+                </div>
+
+                {/* 10. Sử dụng tồn từ */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <Database size={14} className="text-slate-400" /> Sử dụng tồn từ ?
+                  </label>
+                  <input type="text" name="su_dung_ton_tu" defaultValue={initialData?.su_dung_ton_tu || ''} placeholder="Lô/Ngày..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all placeholder-slate-400" />
+                </div>
+
+                {/* 11. Đơn giá */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                    <DollarSign size={14} className="text-slate-400" /> Đơn giá (VND)
+                  </label>
+                  <div className="relative">
+                    <input type="number" name="don_gia" defaultValue={initialData?.don_gia || 0} className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-orange-600 focus:ring-2 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all" />
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[14px]">₫</span>
                   </div>
                 </div>
               </div>

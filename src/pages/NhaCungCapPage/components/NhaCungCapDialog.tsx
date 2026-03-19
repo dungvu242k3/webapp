@@ -34,6 +34,23 @@ const NhaCungCapDialog: React.FC<NhaCungCapDialogProps> = ({ isOpen, onClose, on
     }
   }, [isOpen]);
 
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'NCC-';
+    for (let i = 0; i < 4; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
+    }
+  }, [isOpen, initialData]);
+
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -116,7 +133,14 @@ const NhaCungCapDialog: React.FC<NhaCungCapDialogProps> = ({ isOpen, onClose, on
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
                     <Hash size={14} className="text-slate-400" /> Mã NCC <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input type="text" name="ma_ncc" required defaultValue={initialData?.ma_ncc || ''} placeholder="Mã định danh đối tác..." className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none transition-all placeholder-slate-400" />
+                  <input
+                    type="text"
+                    name="ma_ncc"
+                    readOnly
+                    required
+                    value={initialData?.ma_ncc || generatedId}
+                    className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 cursor-not-allowed italic"
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
@@ -169,7 +193,12 @@ const NhaCungCapDialog: React.FC<NhaCungCapDialogProps> = ({ isOpen, onClose, on
 
         <div className="px-6 py-4 border-t border-slate-200 bg-white flex items-center justify-between sticky bottom-0 z-10 shrink-0">
           <button type="button" onClick={handleClose} className="px-6 py-2.5 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-600 hover:bg-slate-50 transition-all active:scale-95">Hủy bỏ</button>
-          <button type="submit" form="nhacungcap-form" disabled={loading} className="px-8 py-2.5 bg-teal-600 text-white rounded-xl text-[14px] font-bold hover:bg-teal-700 shadow-lg shadow-teal-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <button
+            type="submit"
+            form="nhacungcap-form"
+            disabled={loading}
+            className="px-8 py-2.5 bg-linear-to-r from-teal-600 to-emerald-600 text-white rounded-xl text-[14px] font-bold hover:from-teal-700 hover:to-emerald-700 shadow-lg shadow-teal-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <Plus size={20} />
             {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Hoàn tất'} <ChevronRight size={20} className="ml-0.5" />
           </button>

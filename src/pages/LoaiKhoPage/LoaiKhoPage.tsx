@@ -170,9 +170,10 @@ const LoaiKhoPage: React.FC = () => {
             </button>
             <button
               onClick={handleAdd}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-purple-500/10"
+              className="bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-5 py-2 rounded-xl flex items-center gap-2.5 text-[14px] font-bold transition-all active:scale-95 shadow-lg shadow-purple-500/20 group"
             >
-              <Plus size={20} /> Thêm kho
+              <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" /> 
+              Thêm kho mới
             </button>
           </div>
         </div>
@@ -186,8 +187,8 @@ const LoaiKhoPage: React.FC = () => {
                   <th className="px-6 py-4 w-10 text-center">
                     <input className="rounded border-slate-300 text-purple-600 size-4" type="checkbox"/>
                   </th>
-                  <th className="px-6 py-4 w-[200px]">Mã Định Danh (ID)</th>
-                  <th className="px-6 py-4">Tên Gọi Kho</th>
+                  <th className="px-6 py-4 w-[200px]">ID</th>
+                  <th className="px-6 py-4">Tên Kho</th>
                   <th className="px-6 py-4 text-center w-[150px]">Thao tác</th>
                 </tr>
               </thead>

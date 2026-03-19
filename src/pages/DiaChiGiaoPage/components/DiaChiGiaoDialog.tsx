@@ -30,6 +30,23 @@ const DiaChiGiaoDialog: React.FC<DiaChiGiaoDialogProps> = ({ isOpen, onClose, on
     }
   }, [isOpen]);
 
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'DCG-';
+    for (let i = 0; i < 4; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
+    }
+  }, [isOpen, initialData]);
+
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -105,27 +122,27 @@ const DiaChiGiaoDialog: React.FC<DiaChiGiaoDialogProps> = ({ isOpen, onClose, on
               <div className="grid grid-cols-1 gap-5">
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Hash size={14} className="text-slate-400" /> ID Định danh <span className="text-red-500 font-bold">*</span>
+                    <Hash size={14} className="text-slate-400" /> ID <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input 
-                    type="text" 
-                    name="ma_dia_chi_giao" 
-                    required 
-                    defaultValue={initialData?.ma_dia_chi_giao || ''} 
-                    placeholder="Mã định danh địa chỉ..." 
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder-slate-400" 
+                  <input
+                    type="text"
+                    name="ma_dia_chi_giao"
+                    readOnly
+                    required
+                    value={initialData?.ma_dia_chi_giao || generatedId}
+                    className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 cursor-not-allowed italic"
                   />
                 </div>
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Navigation size={14} className="text-slate-400" /> Địa chỉ giao hàng <span className="text-red-500 font-bold">*</span>
+                    <Navigation size={14} className="text-slate-400" /> Địa Chỉ Giao <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input 
                     type="text" 
                     name="dia_chi_giao" 
                     required 
                     defaultValue={initialData?.dia_chi_giao || ''} 
-                    placeholder="Tên đường, phường/xã, quận/huyện..." 
+                    placeholder="Nhập địa chỉ giao..." 
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder-slate-400" 
                   />
                 </div>
@@ -136,9 +153,14 @@ const DiaChiGiaoDialog: React.FC<DiaChiGiaoDialogProps> = ({ isOpen, onClose, on
 
         <div className="px-6 py-4 border-t border-slate-200 bg-white flex items-center justify-between sticky bottom-0 z-10">
           <button type="button" onClick={handleClose} className="px-6 py-2.5 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-600 hover:bg-slate-50 transition-all active:scale-95">Hủy bỏ</button>
-          <button type="submit" form="diachigiao-form" disabled={loading} className="px-8 py-2.5 bg-emerald-600 text-white rounded-xl text-[14px] font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <button
+            type="submit"
+            form="diachigiao-form"
+            disabled={loading}
+            className="px-8 py-2.5 bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-xl text-[14px] font-bold hover:from-emerald-700 hover:to-teal-700 shadow-lg shadow-emerald-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <Plus size={20} />
-            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Tạo địa chỉ'} <ChevronRight size={20} className="ml-0.5" />
+            {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Hoàn tất'} <ChevronRight size={20} className="ml-0.5" />
           </button>
         </div>
       </div>

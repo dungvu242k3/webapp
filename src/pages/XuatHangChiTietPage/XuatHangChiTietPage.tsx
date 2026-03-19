@@ -14,7 +14,6 @@ import {
   Trash2,
   FileSpreadsheet,
   Hash,
-  Link,
   Package,
   Activity
 } from 'lucide-react';
@@ -193,7 +192,7 @@ const XuatHangChiTietPage: React.FC = () => {
                 : "text-slate-500 hover:text-slate-700 bg-transparent shadow-none border-none"
             )}
           >
-            <FileSpreadsheet size={18} /> Nhật ký chi tiết vật tư xuất kho
+            <FileSpreadsheet size={18} /> Xuất hàng CT
           </button>
         </div>
 
@@ -225,9 +224,10 @@ const XuatHangChiTietPage: React.FC = () => {
             </button>
             <button
               onClick={handleAdd}
-              className="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-cyan-500/10"
+              className="bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white px-5 py-2 rounded-xl flex items-center gap-2.5 text-[14px] font-bold transition-all active:scale-95 shadow-lg shadow-cyan-500/20 group"
             >
-              <Plus size={20} /> Thêm chi tiết
+              <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" /> 
+              Thêm chi tiết mới
             </button>
           </div>
         </div>
@@ -241,11 +241,17 @@ const XuatHangChiTietPage: React.FC = () => {
                   <th className="px-4 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
-                  <th className="px-4 py-3 w-[150px]">ID Chi tiết</th>
-                  <th className="px-4 py-3">Sản phẩm & Hành động</th>
-                  <th className="px-4 py-3">Kho & Quy tắc</th>
-                  <th className="px-4 py-3 text-right">Số lượng (Tấn/m3)</th>
-                  <th className="px-4 py-3 text-right">Đơn giá</th>
+                  <th className="px-4 py-3 w-[150px]">ID</th>
+                  <th className="px-4 py-3">ID Ref</th>
+                  <th className="px-4 py-3">Mã Hàng</th>
+                  <th className="px-4 py-3">Kho</th>
+                  <th className="px-4 py-3">Hành động</th>
+                  <th className="px-4 py-3">Loại nhập số</th>
+                  <th className="px-4 py-3 text-right">Tỷ Trọng (Lưu)</th>
+                  <th className="px-4 py-3 text-right">Số Lượng (Tấn)</th>
+                  <th className="px-4 py-3 text-right">Số Lượng (m3)</th>
+                  <th className="px-4 py-3 text-center">Sử dụng tồn từ ?</th>
+                  <th className="px-4 py-3 text-right">Đơn giá (VND)</th>
                   <th className="px-4 py-3 text-center w-[120px]">Thao tác</th>
                 </tr>
               </thead>
@@ -265,38 +271,47 @@ const XuatHangChiTietPage: React.FC = () => {
                         <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex flex-col gap-1">
-                           <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase">
-                             <Hash size={12} className="text-cyan-500" /> {item.ma_ct}
-                           </div>
-                           <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
-                             <Link size={10} /> {item.xuat_hang?.ma_xuat || 'N/A'}
-                           </div>
+                        <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase tabular-nums">
+                          <Hash size={12} className="text-cyan-500" /> {item.ma_ct}
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase">
-                            <Package size={14} className="text-slate-400" /> {item.ma_hang || 'Sản phẩm lỗi'}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-500 font-medium italic">
-                            <Activity size={12} className="text-slate-400" /> {item.hanh_dong || 'Xuất bán'}
-                          </div>
+                        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-mono font-bold">
+                           {item.xuat_hang?.ma_xuat || 'N/A'}
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="font-bold text-slate-700">{item.kho || 'Kho trung tâm'}</div>
-                        <div className="text-[10px] text-slate-400">Quy tắc: {item.loai_nhap_so || 'Mặc định'}</div>
+                        <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase">
+                          <Package size={14} className="text-slate-400" /> {item.ma_hang || '—'}
+                        </div>
                       </td>
-                      <td className="px-4 py-4 text-right font-bold">
-                        <div className="text-cyan-600">{item.so_luong_tan.toLocaleString()} Tấn</div>
-                        <div className="text-slate-400 text-[10px]">{item.so_luong_m3.toLocaleString()} m³ | Tỉ trọng: {item.ty_trong}</div>
+                      <td className="px-4 py-4">
+                        <div className="font-bold text-slate-700 tabular-nums uppercase">{item.kho || '—'}</div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-500 font-medium italic">
+                          <Activity size={12} className="text-slate-400" /> {item.hanh_dong || '—'}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
+                        <span className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold uppercase">{item.loai_nhap_so || '—'}</span>
+                      </td>
+                      <td className="px-4 py-4 text-right font-bold tabular-nums text-slate-600">
+                        {item.ty_trong || 0}
+                      </td>
+                      <td className="px-4 py-4 text-right font-bold tabular-nums text-cyan-600">
+                        {item.so_luong_tan?.toLocaleString() || 0}
+                      </td>
+                      <td className="px-4 py-4 text-right font-bold tabular-nums text-blue-600">
+                        {item.so_luong_m3?.toLocaleString() || 0}
+                      </td>
+                      <td className="px-4 py-4 text-center">
+                        <span className="text-slate-500 font-medium italic tabular-nums">{item.su_dung_ton_tu || '—'}</span>
                       </td>
                       <td className="px-4 py-4 text-right">
                         <div className="text-slate-900 font-bold tabular-nums italic">
                           {formatCurrency(item.don_gia)}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-medium">Đơn vị: VND</span>
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-center gap-4">
@@ -336,7 +351,6 @@ const XuatHangChiTietPage: React.FC = () => {
         initialData={selectedItem}
         onSuccess={fetchDetails}
         issues={issues}
-        items={[]}
       />
     </div>
   );

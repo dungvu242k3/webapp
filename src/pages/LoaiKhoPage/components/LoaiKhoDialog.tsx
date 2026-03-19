@@ -30,6 +30,23 @@ const LoaiKhoDialog: React.FC<LoaiKhoDialogProps> = ({ isOpen, onClose, onSucces
     }
   }, [isOpen]);
 
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'LK-';
+    for (let i = 0; i < 4; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
+    }
+  }, [isOpen, initialData]);
+
   const handleClose = () => {
     setIsClosing(true);
     setTimeout(() => {
@@ -128,28 +145,28 @@ const LoaiKhoDialog: React.FC<LoaiKhoDialogProps> = ({ isOpen, onClose, onSucces
               <div className="space-y-4">
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Hash size={14} className="text-slate-400" /> Mã phân loại <span className="text-red-500 font-bold">*</span>
+                    <Hash size={14} className="text-slate-400" /> ID <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="text"
                     name="ma_loai_kho"
+                    readOnly
                     required
-                    defaultValue={initialData?.ma_loai_kho || ''}
-                    placeholder="Mã định danh kho..."
-                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all placeholder-slate-400"
+                    value={initialData?.ma_loai_kho || generatedId}
+                    className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 cursor-not-allowed italic"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
-                    <Type size={14} className="text-slate-400" /> Tên gọi chi tiết <span className="text-red-500 font-bold">*</span>
+                    <Type size={14} className="text-slate-400" /> Tên Kho <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="text"
                     name="ten_kho"
                     required
                     defaultValue={initialData?.ten_kho || ''}
-                    placeholder="Tên gọi chi tiết kho..."
+                    placeholder="Nhập tên kho..."
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all placeholder-slate-400"
                   />
                 </div>
@@ -170,7 +187,7 @@ const LoaiKhoDialog: React.FC<LoaiKhoDialogProps> = ({ isOpen, onClose, onSucces
             type="submit"
             form="loaikho-form"
             disabled={loading}
-            className="px-8 py-2.5 bg-purple-600 text-white rounded-xl text-[14px] font-bold hover:bg-purple-700 shadow-lg shadow-purple-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-8 py-2.5 bg-linear-to-r from-purple-600 to-indigo-600 text-white rounded-xl text-[14px] font-bold hover:from-purple-700 hover:to-indigo-700 shadow-lg shadow-purple-500/20 flex items-center gap-2.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus size={20} />
             {loading ? 'Đang lưu...' : initialData ? 'Cập nhật' : 'Hoàn tất'} 

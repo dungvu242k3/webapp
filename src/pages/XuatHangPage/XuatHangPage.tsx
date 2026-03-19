@@ -13,12 +13,7 @@ import {
   ArrowLeft,
   Edit2,
   Trash2,
-  Upload,
-  Link,
-  Briefcase,
-  User,
-  Warehouse,
-  Truck
+  Upload
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
@@ -41,7 +36,7 @@ interface XuatHangData {
   nhan_vien_xuat: string;
   ngay_gio: string;
   nhap_hang?: {
-    so_phieu: string;
+    id_nhap: string;
   };
 }
 
@@ -63,7 +58,7 @@ const XuatHangPage: React.FC = () => {
         .select(`
           *,
           nhap_hang (
-            so_phieu
+            id_nhap
           )
         `)
         .order('created_at', { ascending: false });
@@ -184,7 +179,7 @@ const XuatHangPage: React.FC = () => {
                 : "text-slate-500 hover:text-slate-700 bg-transparent shadow-none border-none"
             )}
           >
-            <Folder size={18} /> Nhật ký xuất kho hàng hóa
+            <Folder size={18} /> Xuất hàng
           </button>
         </div>
 
@@ -233,10 +228,18 @@ const XuatHangPage: React.FC = () => {
                     <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                   </th>
                   <th className="px-3 py-3 w-[120px]">ID Xuất</th>
-                  <th className="px-3 py-3">Thông Tin Lô Hàng</th>
-                  <th className="px-3 py-3">Địa Điểm & Vận Chuyển</th>
-                  <th className="px-3 py-3 text-right">Chi Phí</th>
-                  <th className="px-3 py-3">Nhân Sự & Thời Gian</th>
+                  <th className="px-3 py-3">ID Nhập REF</th>
+                  <th className="px-3 py-3">Mã Dự Án</th>
+                  <th className="px-3 py-3">Khách hàng</th>
+                  <th className="px-3 py-3">Mã Kho</th>
+                  <th className="px-3 py-3 text-center">Mã Địa Chỉ Bán</th>
+                  <th className="px-3 py-3 text-center">Mã Xe Xuất</th>
+                  <th className="px-3 py-3 text-center">Mã DVVC Xuất</th>
+                  <th className="px-3 py-3 text-right">Phí Vận Chuyển</th>
+                  <th className="px-3 py-3 text-center">Ghi Chú</th>
+                  <th className="px-3 py-3 text-center">Hình Ảnh</th>
+                  <th className="px-3 py-3">Nhân Viên Xuất</th>
+                  <th className="px-3 py-3">Ngày Giờ</th>
                   <th className="px-3 py-3 text-center w-[100px]">Thao tác</th>
                 </tr>
               </thead>
@@ -256,49 +259,56 @@ const XuatHangPage: React.FC = () => {
                         <input className="rounded border-slate-300 text-[#2563eb] size-4" type="checkbox"/>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                           <div className="flex items-center gap-1.5 text-slate-900 font-bold">
-                             <Upload size={12} className="text-blue-500" /> {item.ma_xuat}
-                           </div>
-                           <div className="flex items-center gap-1 text-[10px] text-slate-400 font-mono">
-                             <Link size={10} /> RE: {item.nhap_hang?.so_phieu || 'N/A'}
-                           </div>
+                        <div className="flex items-center gap-1.5 text-slate-900 font-bold">
+                          <Upload size={12} className="text-blue-500" /> {item.ma_xuat}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold">
-                            <Briefcase size={12} className="text-slate-400" /> {item.ma_du_an || 'Không gán dự án'}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-                            <User size={12} className="text-slate-400" /> {item.khach_hang || 'Khách lẻ'}
-                          </div>
+                        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-mono font-bold">
+                           {item.nhap_hang?.id_nhap || 'N/A'}
                         </div>
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold uppercase truncate max-w-[200px]">
-                            <Warehouse size={12} className="text-slate-400" /> KHO: {item.ma_kho || 'N/A'}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-500 font-medium italic truncate max-w-[200px]">
-                            <Truck size={12} className="text-slate-400" /> {item.ma_xe_xuat || 'Chưa gán xe'} - {item.ma_dvvc_xuat || 'DVVC?'}
-                          </div>
-                        </div>
+                        <span className="font-medium text-slate-700">{item.ma_du_an || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <span className="font-bold text-slate-900">{item.khach_hang || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <span className="font-bold text-slate-600 uppercase tabular-nums">{item.ma_kho || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-slate-500 font-medium">{item.ma_dia_chi_ban || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-slate-700 font-bold">{item.ma_xe_xuat || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-slate-500 font-medium">{item.ma_dvvc_xuat || '—'}</span>
                       </td>
                       <td className="px-3 py-4 text-right">
                         <div className="text-red-500 font-bold tabular-nums">
                           {formatCurrency(item.phi_van_chuyen)}
                         </div>
-                        <span className="text-[10px] text-slate-400 font-medium italic">Phí vận chuyển</span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        <span className="text-slate-500 truncate max-w-[150px] inline-block font-medium italic">{item.ghi_chu || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4 text-center">
+                        {item.hinh_anh ? (
+                          <div className="size-8 rounded border border-slate-200 overflow-hidden mx-auto bg-white">
+                            <img src={item.hinh_anh} alt="Phieu xuat" className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <span className="text-slate-300">—</span>
+                        )}
                       </td>
                       <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-900 font-bold">
-                            <User size={12} className="text-slate-400" /> {item.nhan_vien_xuat || 'Admin'}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-slate-400 font-medium tabular-nums">
-                            <Clock size={12} /> {item.ngay_gio ? new Date(item.ngay_gio).toLocaleString('vi-VN') : 'N/A'}
-                          </div>
+                        <span className="font-bold text-slate-900">{item.nhan_vien_xuat || '—'}</span>
+                      </td>
+                      <td className="px-3 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-400 font-medium tabular-nums min-w-[120px]">
+                          <Clock size={12} /> {item.ngay_gio ? new Date(item.ngay_gio).toLocaleString('vi-VN') : 'N/A'}
                         </div>
                       </td>
                       <td className="px-3 py-4">

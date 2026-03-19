@@ -170,9 +170,10 @@ const DiaChiMuaPage: React.FC = () => {
             </button>
             <button
               onClick={handleAdd}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-orange-500/10"
+              className="bg-linear-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-5 py-2 rounded-xl flex items-center gap-2.5 text-[14px] font-bold transition-all active:scale-95 shadow-lg shadow-orange-500/20 group"
             >
-              <Plus size={20} /> Thêm địa chỉ
+              <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" /> 
+              Thêm địa chỉ mới
             </button>
           </div>
         </div>
@@ -186,8 +187,8 @@ const DiaChiMuaPage: React.FC = () => {
                   <th className="px-6 py-4 w-10 text-center">
                     <input className="rounded border-slate-300 text-orange-600 size-4" type="checkbox"/>
                   </th>
-                  <th className="px-6 py-4 w-[200px]">Mã Địa Chỉ (ID)</th>
-                  <th className="px-6 py-4">Địa Chỉ Thu Mua</th>
+                  <th className="px-6 py-4 w-[200px]">ID</th>
+                  <th className="px-6 py-4">Địa Chỉ Mua</th>
                   <th className="px-6 py-4 text-center w-[150px]">Thao tác</th>
                 </tr>
               </thead>

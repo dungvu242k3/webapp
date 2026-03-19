@@ -13,9 +13,7 @@ import {
   ArrowLeft,
   Edit2,
   Trash2,
-  Hash,
-  CreditCard,
-  Phone
+  Hash
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
@@ -194,9 +192,10 @@ const NhaCungCapPage: React.FC = () => {
             </button>
             <button
               onClick={handleAdd}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-1.5 rounded flex items-center gap-2 text-[14px] font-semibold transition-all active:scale-95 shadow-lg shadow-teal-500/10"
+              className="bg-linear-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white px-5 py-2 rounded-xl flex items-center gap-2.5 text-[14px] font-bold transition-all active:scale-95 shadow-lg shadow-teal-500/20 group"
             >
-              <Plus size={20} /> Thêm đối tác
+              <Plus size={20} className="group-hover:rotate-90 transition-transform duration-300" /> 
+              Thêm đối tác mới
             </button>
           </div>
         </div>
@@ -210,10 +209,12 @@ const NhaCungCapPage: React.FC = () => {
                   <th className="px-3 py-3 w-10 text-center">
                     <input className="rounded border-slate-300 text-teal-600 size-4" type="checkbox"/>
                   </th>
-                  <th className="px-3 py-3 w-[150px]">Mã NCC</th>
-                  <th className="px-3 py-3">Thông Tin Đối Tác</th>
-                  <th className="px-3 py-3">Tài Khoản Thanh Toán</th>
-                  <th className="px-3 py-3">Liên Hệ & Địa Chỉ</th>
+                  <th className="px-3 py-3 w-[120px]">Mã NCC</th>
+                  <th className="px-3 py-3 w-[200px]">Tên NCC</th>
+                  <th className="px-3 py-3 w-[150px]">Số TK NCC</th>
+                  <th className="px-3 py-3 w-[150px]">Mã Ngân Hàng NCC</th>
+                  <th className="px-3 py-3">Địa chỉ</th>
+                  <th className="px-3 py-3 w-[120px]">SĐT</th>
                   <th className="px-3 py-3 text-center w-[120px]">Thao tác</th>
                 </tr>
               </thead>
@@ -238,33 +239,20 @@ const NhaCungCapPage: React.FC = () => {
                           {item.ma_ncc}
                         </div>
                       </td>
-                      <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="text-slate-900 font-bold uppercase truncate max-w-[200px]">
-                            {item.ten_ncc}
-                          </div>
-                          <div className="text-[10px] text-slate-400 font-medium italic">Nhà cung cấp vật tư chính</div>
-                        </div>
+                      <td className="px-3 py-4 text-slate-900 font-bold uppercase tabular-nums">
+                        {item.ten_ncc}
                       </td>
-                      <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-700 font-bold tabular-nums">
-                            <CreditCard size={12} className="text-slate-400" /> {item.stk_ncc || 'Chưa cập nhật'}
-                          </div>
-                          <div className="text-[10px] text-slate-400 ml-5 font-medium uppercase font-mono">
-                             ID BANK: {item.ma_ngan_hang_ncc || 'N/A'}
-                          </div>
-                        </div>
+                      <td className="px-3 py-4 text-slate-700 font-bold tabular-nums">
+                        {item.stk_ncc || '-'}
                       </td>
-                      <td className="px-3 py-4">
-                        <div className="flex flex-col gap-1">
-                          <div className="flex items-center gap-1.5 text-slate-700 font-bold">
-                            <Phone size={12} className="text-slate-400" /> {item.sdt || 'N/A'}
-                          </div>
-                          <div className="text-[10px] text-slate-400 font-medium truncate max-w-[250px] italic">
-                             {item.dia_chi || 'Địa chỉ đang cập nhật...'}
-                          </div>
-                        </div>
+                      <td className="px-3 py-4 text-slate-500 font-mono font-medium uppercase">
+                        {item.ma_ngan_hang_ncc || '-'}
+                      </td>
+                      <td className="px-3 py-4 text-slate-500 italic truncate max-w-[200px]">
+                        {item.dia_chi || '-'}
+                      </td>
+                      <td className="px-3 py-4 text-slate-700 font-bold tabular-nums">
+                        {item.sdt || '-'}
                       </td>
                       <td className="px-3 py-4">
                         <div className="flex items-center justify-center gap-4">

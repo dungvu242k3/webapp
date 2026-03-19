@@ -42,8 +42,25 @@ const XuatHangDialog: React.FC<XuatHangDialogProps> = ({ isOpen, onClose, onSucc
     }
   }, [isOpen]);
 
+  const generateRandomId = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = 'XH-';
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  };
+
+  const [generatedId, setGeneratedId] = useState('');
+
+  useEffect(() => {
+    if (isOpen && !initialData) {
+      setGeneratedId(generateRandomId());
+    }
+  }, [isOpen, initialData]);
+
   const fetchReceipts = async () => {
-    const { data: res } = await supabase.from('nhap_hang').select('id, so_phieu').order('created_at', { ascending: false });
+    const { data: res } = await supabase.from('nhap_hang').select('id, id_nhap').order('created_at', { ascending: false });
     setReceipts(res || []);
   };
 
@@ -163,7 +180,15 @@ const XuatHangDialog: React.FC<XuatHangDialogProps> = ({ isOpen, onClose, onSucc
                   <label className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
                     <Hash size={14} className="text-slate-400" /> ID Xuất <span className="text-red-500 font-bold">*</span>
                   </label>
-                  <input type="text" name="ma_xuat" required defaultValue={initialData?.ma_xuat || ''} placeholder="Mã phiếu xuất..." className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all placeholder-slate-400" />
+                  <input 
+                    type="text" 
+                    name="ma_xuat" 
+                    readOnly
+                    required 
+                    value={initialData?.ma_xuat || generatedId} 
+                    placeholder="ID tự động sinh..." 
+                    className="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-500 focus:ring-0 focus:border-slate-200 outline-none transition-all cursor-not-allowed" 
+                  />
                 </div>
 
                 <div className="space-y-1.5">
@@ -174,7 +199,7 @@ const XuatHangDialog: React.FC<XuatHangDialogProps> = ({ isOpen, onClose, onSucc
                     <select name="id_nhap_ref" defaultValue={initialData?.id_nhap_ref || ''} className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-[14px] font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all appearance-none cursor-pointer">
                       <option value="">Không liên kết</option>
                       {receipts.map(r => (
-                        <option key={r.id} value={r.id}>{r.so_phieu}</option>
+                        <option key={r.id} value={r.id}>{r.id_nhap}</option>
                       ))}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
