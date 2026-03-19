@@ -23,11 +23,10 @@ interface XuatHangChiTietDialogProps {
   onClose: () => void;
   onSuccess: () => void;
   issues: any[];
-  items: any[];
   initialData?: any;
 }
 
-const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, items, initialData }: XuatHangChiTietDialogProps) => {
+const XuatHangChiTietDialog = ({ isOpen, onClose, onSuccess, issues, initialData }: XuatHangChiTietDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);

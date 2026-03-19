@@ -34,7 +34,7 @@ const ThanhToanXuatDialog: React.FC<ThanhToanXuatDialogProps> = ({ isOpen, onClo
   }, [isOpen]);
 
   const fetchSalesRecords = async () => {
-    const { data: res } = await supabase.from('cong_no_ban').select('id, ma_vandon').order('created_at', { ascending: false });
+    const { data: res } = await supabase.from('cong_no_ban').select('id, id_ref').order('created_at', { ascending: false });
     setSalesRecords(res || []);
   };
 
@@ -167,7 +167,7 @@ const ThanhToanXuatDialog: React.FC<ThanhToanXuatDialogProps> = ({ isOpen, onClo
                     >
                       <option value="">Chọn vận đơn liên quan...</option>
                       {salesRecords.map(s => (
-                        <option key={s.id} value={s.id}>{s.ma_vandon}</option>
+                        <option key={s.id} value={s.id}>{s.id_ref}</option>
                       ))}
                     </select>
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">

@@ -67,7 +67,7 @@ const NhapHangChiTietPage: React.FC = () => {
 
       // Tải danh sách phiếu nhập để làm dữ liệu select trong Dialog
       const { data: receiptsData, error: receiptsError } = await supabase
-        .from('receipts')
+        .from('nhap_hang')
         .select('id, so_phieu')
         .order('created_at', { ascending: false });
       if (receiptsError) throw receiptsError;

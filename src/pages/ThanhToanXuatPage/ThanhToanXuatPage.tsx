@@ -28,7 +28,7 @@ interface ThanhToanXuatData {
   id_ref: string;
   so_tien: number;
   cong_no_ban?: {
-    ma_vandon: string;
+    id_ref: string;
   };
 }
 
@@ -50,7 +50,7 @@ const ThanhToanXuatPage: React.FC = () => {
         .select(`
           *,
           cong_no_ban (
-            ma_vandon
+            id_ref
           )
         `)
         .order('created_at', { ascending: false });
@@ -107,7 +107,7 @@ const ThanhToanXuatPage: React.FC = () => {
 
   const filteredData = data.filter(item => 
     item.ma_thanh_toan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (item.cong_no_ban?.ma_vandon && item.cong_no_ban.ma_vandon.toLowerCase().includes(searchTerm.toLowerCase()))
+    (item.cong_no_ban?.id_ref && item.cong_no_ban.id_ref.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
@@ -250,7 +250,7 @@ const ThanhToanXuatPage: React.FC = () => {
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2.5 text-slate-900 font-bold">
                            <Link size={16} className="text-slate-400" />
-                           {item.cong_no_ban?.ma_vandon || 'Chưa gán'}
+                           {item.cong_no_ban?.id_ref || 'Chưa gán'}
                            <span className="text-[10px] text-slate-300 font-mono ml-2">({item.id_ref})</span>
                         </div>
                       </td>

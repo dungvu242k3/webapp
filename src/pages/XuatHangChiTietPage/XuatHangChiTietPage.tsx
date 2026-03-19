@@ -50,6 +50,7 @@ const XuatHangChiTietPage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<XuatHangChiTietData | null>(null);
   const [currentTab, setCurrentTab] = useState<'all'>('all');
+  const [issues, setIssues] = useState<any[]>([]);
 
   const fetchDetails = async () => {
     setLoading(true);
@@ -69,6 +70,18 @@ const XuatHangChiTietPage: React.FC = () => {
       console.error('Lỗi khi tải chi tiết xuất:', err);
     } finally {
       setLoading(false);
+    }
+
+    // Lấy danh sách phiếu xuất để làm dữ liệu dropdown trong Dialog
+    try {
+      const { data: issuesData, error: issuesError } = await supabase
+        .from('xuat_hang')
+        .select('id, ma_xuat')
+        .order('created_at', { ascending: false });
+      if (issuesError) throw issuesError;
+      setIssues(issuesData || []);
+    } catch (err) {
+      console.error('Lỗi tải danh sách phiếu xuất:', err);
     }
   };
 
@@ -324,6 +337,8 @@ const XuatHangChiTietPage: React.FC = () => {
         onClose={() => setIsDialogOpen(false)}
         initialData={selectedItem}
         onSuccess={fetchDetails}
+        issues={issues}
+        items={[]}
       />
     </div>
   );

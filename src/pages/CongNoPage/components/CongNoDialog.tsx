@@ -33,7 +33,10 @@ const CongNoDialog: React.FC<CongNoDialogProps> = ({ isOpen, onClose, onSuccess,
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(onClose, 300);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 300);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
